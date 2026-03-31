@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Maople</title>
+
+  <!-- Mapbox CSS -->
+  <link
+  href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css"
+  rel="stylesheet"
+  />
+
+  <link
+  href="https://unpkg.com/@mapbox/mapbox-gl-geocoder@5.0.1/dist/mapbox-gl-geocoder.css"
+  rel="stylesheet"
+  />
+
+  <!-- Link to CSS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@700&family=Lexend:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css"/>
+</head>
+
+<body>
+
+  <div class="app-shell">
+
+    <header class="top-bar">
+      <div class="logo">maople</div>
+      <div id="search-container"></div>
+      <button id="profileBtn" class="profile-btn" type="button" aria-label="Profile">
+        <span class="profile-btn-icon">U</span>
+      </button>
+    </header>
+
+    <button id="review-place-btn" style="display:none;">
+      📍 Review this place
+    </button>
+
+    <div id="addPlacePrompt" class="add-place-ui" style="display:none">
+
+      <p>
+        <strong class="place-name"></strong> isn't in Maople yet.
+      </p>
+
+      <div class="button-group">
+        <button id="confirmPlaceBtn" type="button">
+          Create this place
+        </button>
+        <button id="cancelPlaceBtn" type="button">
+          Cancel
+        </button>
+      </div>
+
+    </div>
+
+    <div id="addToMapPrompt" class="add-to-map-ui" style="display:none">
+
+      <p>
+        <strong class="place-name"></strong> doesn't exist yet.
+      </p>
+
+      <p>Add it to the map?</p>
+
+      <div class="button-group">
+        <button id="addToMapBtn" type="button">
+          Add to Map
+        </button>
+        <button id="cancelAddToMapBtn" type="button">
+          Cancel
+        </button>
+      </div>
+
+    </div>
+
+    <div id="locationConfirmUI" class="location-confirm-ui" style="display:none">
+      <div class="confirm-content">
+        <h3>Confirm Location</h3>
+        <p>Type general area in the search bar, or drag the pin to adjust the location.</p>
+        <div class="button-group">
+          <button id="confirmLocationBtn" type="button">
+            Confirm Location
+          </button>
+          <button id="cancelLocationBtn" type="button">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div id="searchForSpecificUI" class="search-instruction-ui" style="display:none">
+      <div class="instruction-content">
+        <button id="closeAddModeBtn" type="button" class="close-ui-btn" aria-label="Exit add mode">
+          ×
+        </button>
+        <h3>Search for a specific place</h3>
+        <p>You're in <strong class="area-name"></strong>. Place you're looking for not here?</p>
+        <div class="button-group">
+          <button id="addFromAreaBtn" type="button">
+            Add to Map
+          </button>
+          <button id="closeAreaInstructionBtn" type="button">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div id="map"></div>
+
+    <div id="sidePanel" class="side-panel">
+      <div class="panel-handle" aria-hidden="true"></div>
+      <div class="panel-header">
+        <div class="panel-title-block">
+          <h3 id="panelTitle"></h3>
+          <div id="panelTags" class="panel-tags"></div>
+        </div>
+        <div class="panel-compact-preview" aria-hidden="true"></div>
+        <div class="panel-actions">
+          <button id="cancelReviewBtn" type="button" class="panel-action-btn">
+            Cancel review
+          </button>
+          <button id="closePanelBtn" class="panel-icon-btn" aria-label="Hide panel">
+            ✕
+          </button>
+        </div>
+      </div>
+
+      <div id="panelContent" class="side-panel-content"></div>
+    </div>
+
+    <button id="sidePanelTab" class="side-panel-tab" type="button">
+      &lt;
+    </button>
+
+    <div class="filter-dock" id="filterDock">
+      <div class="dock-grabber" role="button" aria-label="Expand filters"></div>
+      <div class="dock-row">
+        <div id="quickFilters" class="quick-filters"></div>
+      </div>
+      <div id="filterContent">
+        <div id="filter-container"></div>
+      </div>
+    </div>
+
+    <div id="profileSetupPrompt" class="profile-prompt hidden">
+      <div class="profile-prompt-text">
+        Want better recommendations next time?
+      </div>
+      <button id="profilePromptBtn" type="button">Set up your preferences</button>
+    </div>
+
+    <div id="profileSetupModal" class="profile-modal hidden" role="dialog" aria-modal="true">
+      <div class="profile-modal-content">
+        <button id="profileCloseBtn" class="profile-close-btn" type="button" aria-label="Close profile setup">&times;</button>
+        <div class="profile-modal-header">
+          <h2>Help us understand what environments work best for you.</h2>
+          <p>Your preferences help us recommend places that match your needs.</p>
+        </div>
+        <div id="profileStepProgress" class="profile-step-progress"></div>
+        <div id="profileStepContent" class="profile-step-content"></div>
+        <div class="profile-step-actions">
+          <button id="profileBackBtn" type="button" class="profile-secondary-btn">Back</button>
+          <button id="profileSkipBtn" type="button" class="profile-ghost-btn">Skip</button>
+          <button id="profileNextBtn" type="button">Next</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="groupModeModal" class="group-modal hidden" role="dialog" aria-modal="true">
+      <div class="group-modal-content">
+        <button id="groupCloseBtn" class="profile-close-btn" type="button" aria-label="Close group mode">&times;</button>
+        <div class="profile-modal-header">
+          <h2>Plan with others</h2>
+          <p>Create a group so recommendations work for everyone.</p>
+        </div>
+        <div id="groupStepProgress" class="profile-step-progress"></div>
+        <div id="groupStepContent" class="profile-step-content"></div>
+        <div class="profile-step-actions">
+          <button id="groupBackBtn" class="profile-secondary-btn" type="button">Back</button>
+          <button id="groupNextBtn" class="profile-secondary-btn" type="button">Next</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
+    
+  </div>
+
+  <!-- Mapbox core -->
+  <script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
+
+  <!-- Mapbox Geocoder plugin -->
+  <link
+    rel="stylesheet"
+    href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.css"
+  />
+
+  <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.min.js"></script>
+
+  <!-- Review Form (inside side panel) -->
+  <form id="placeForm" style="display:none;">
+
+    <!-- INTRO -->
+    <section class="form-step active" data-step="0">
+      <h3>How did this place feel?</h3>
+      <p>Your answers help people find places that fit their day — whether they want somewhere calm to work, lively for friends, or easy to navigate.</p>
+      <div class="form-nav">
+        <button type="button" class="start-review-btn">Start review →</button>
+      </div>
+    </section>
+
+    <!-- STEP 1 -->
+    <section class="form-step" data-step="1">
+      <h3>Place Info</h3>
+
+      <label>
+        Place name
+        <input type="text" id="placeName" required>
+      </label>
+
+      <label>
+        Category
+        <select id="placeCategory" required>
+          <option value="">Select type</option>
+          <option value="cafe">Cafe/Restaurant</option>
+          <option value="office">Office</option>
+          <option value="school">School</option>
+          <option value="store">Store/Shopping Centre</option>
+          <option value="cultural">Cultural Centre</option>
+          <option value="museum">Museum</option>
+          <option value="library">Library</option>
+          <option value="worship">Place of Worship</option>
+          <option value="hospital">Hospital</option>
+          <option value="hotel">Hotel/Accommodation</option>
+          <option value="other">Other</option>
+        </select>
+      </label>
+
+      <!-- Quick Access -->
+      <p>Quick access check</p>
+      <label><input type="checkbox" name="quickAccess" value="step-free"> Step-free entrance</label>
+      <label><input type="checkbox" name="quickAccess" value="ramp"> Ramp</label>
+      <label><input type="checkbox" name="quickAccess" value="lift"> Lift</label>
+      <label><input type="checkbox" name="quickAccess" value="escalator"> Escalator</label>
+      <label><input type="checkbox" name="quickAccess" value="stairs-only"> Stairs only</label>
+
+      <div class="form-nav">
+        <button type="button" class="next-btn">Next</button>
+      </div>
+    </section>
+
+    <!-- A. MOVEMENT & LAYOUT -->
+    <section class="form-step" data-step="2">
+      <h3>Moving Around</h3>
+
+      <!-- Continuity Bar -->
+      <p>How did it feel to move through this place?</p>
+      <small>Think about whether you moved smoothly or had to stop and figure things out.</small>
+      <input type="range" min="1" max="5" id="movementContinuity">
+
+      <!-- Statement container -->
+      <p>Which of these felt true?</p>
+      <small class="no-divider">Swipe right to agree, left to disagree.</small>
+      <div id="movementStatements">
+        <div class="statement-chip"
+         data-statement="see-next"
+         data-value="neutral">
+         I could usually see where to go next
+        </div>
+
+        <div class="statement-chip"
+         data-statement="hesitated"
+         data-value="neutral">
+          I hesitated at intersections
+        </div>
+        
+        <div class="statement-chip"
+         data-statement="reorient"
+         data-value="neutral">
+          I had to stop and figure out where to go
+        </div>
+      
+      </div>
+
+      <div class="form-nav">
+        <button type="button" class="back-btn">Back</button>
+        <button type="button" class="next-btn">Next</button>
+      </div>
+    </section>
+
+    <!-- B. KNOWING WHERE THINGS WERE -->
+    <section class="form-step" data-step="3">
+      <h3>Finding Your Way</h3>
+
+      <!-- Wayfinding Bar -->
+      <p>How easy was it to find what you need?</p>
+      <small>For example the counter, restroom, entrance, or different areas.</small>
+      <input type="range" min="1" max="5" id="understandingBar">
+
+      <!-- Statement container -->
+      <p>Which of these felt true?</p>
+      <small class="no-divider">Swipe right to agree, left to disagree.</small>
+      <div id="wayfindingStatements">
+
+        <div class="statement-chip"
+         data-statement="find-things"
+         data-value="neutral">
+          I could quickly find important places
+        </div>
+
+        <div class="statement-chip"
+         data-statement="distinct-areas"
+         data-value="neutral">
+          Different areas felt easy to tell apart
+        </div>
+
+        <div class="statement-chip"
+         data-statement="search-things"
+         data-value="neutral">
+          I had to look around or search for things
+        </div>
+
+      </div>
+
+      <div class="form-nav">
+        <button type="button" class="back-btn">Back</button>
+        <button type="button" class="next-btn">Next</button>
+      </div>
+    </section>
+
+    <!-- C1. SOUND -->
+    <section class="form-step" data-step="4">
+      <h3>Sound</h3>
+
+      <!-- Sound Bar -->
+      <p>How did the sound level feel overall?</p>
+      <input type="range" min="1" max="5" id="soundOverall">
+
+      <label>Could you comfortably have a conversation here?</label>
+      <label><input type="radio" name="conversationComfort" value="yes"> Yes</label>
+      <label><input type="radio" name="conversationComfort" value="lean"> Only if I leaned in</label>
+      <label><input type="radio" name="conversationComfort" value="no"> No</label>
+
+      <label>What stood out about the sound here?</label>
+      <label><input type="checkbox" name="soundComponent" value="backgroundMusic"> Background music was loud</label>
+      <label><input type="checkbox" name="soundComponent" value="crowdNoise"> Crowd noise was loud</label>
+      <label><input type="checkbox" name="soundComponent" value="suddenLoud"> Sudden loud moments happened</label>
+      <label><input type="checkbox" name="soundComponent" value="soundEcho"> Sound echoed in the space</label>
+      <label><input type="checkbox" name="soundComponent" value="noneSound"> None of these</label>
+
+      <div class="form-nav">
+        <button type="button" class="back-btn">Back</button>
+        <button type="button" class="next-btn">Next</button>
+      </div>
+    </section>
+
+    <!-- C2. LIGHTING -->
+    <section class="form-step" data-step="5">
+      <h3>Lighting</h3>
+
+      <label>How comfortable did the lighting feel?</label>
+      <input type="range" min="1" max="5" id="lightingOverall">
+
+      <label>How did lighting affect what you were doing?</label>
+      <label><input type="checkbox" name="lightingComponent" value="readable"> I could comfortably read or look at my phone</label>
+      <label><input type="checkbox" name="lightingComponent" value="glaring"> Lighting felt harsh or glaring</label>
+      <label><input type="checkbox" name="lightingComponent" value="dim"> Lighting felt too dim</label>
+      <label><input type="checkbox" name="lightingComponent" value="lightingChange"> Lighting changed a lot between areas</label>
+      <label><input type="checkbox" name="lightingComponent" value="noneLighting"> I didn’t notice the lighting much</label>
+
+      <div class="form-nav">
+        <button type="button" class="back-btn">Back</button>
+        <button type="button" class="next-btn">Next</button>
+      </div>
+    </section>
+
+    <!-- C3. VISUAL -->
+    <section class="form-step" data-step="6">
+      <h3>Visual Feel</h3>
+
+      <label>How visually busy did the space feel?</label>
+      <input type="range" min="1" max="5" id="visualLoadLevel">
+
+      <label>What made the space feel visually busy?</label>
+      <label><input type="checkbox" name="visualComponent" value="decorative"> Many decorative objects</label>
+      <label><input type="checkbox" name="visualComponent" value="patterns"> Lots of patterns or textures</label>
+      <label><input type="checkbox" name="visualComponent" value="brightColors"> Bright colors or strong contrasts</label>
+      <label><input type="checkbox" name="visualComponent" value="movingThings"> Many moving things (screens, people, displays)</label>
+      <label><input type="checkbox" name="visualComponent" value="noneVisual"> Space felt visually calm</label>
+
+      <div class="form-nav">
+        <button type="button" class="back-btn">Back</button>
+        <button type="button" class="next-btn">Next</button>
+      </div>
+    </section>
+
+    <!-- D. SUDDEN CHANGES -->
+    <section class="form-step" data-step="7">
+      <h3>Changes Between Areas</h3>
+
+      <label class="no-divider">Did anything change suddenly as you moved around?</label>
+      <label><input type="checkbox" name="transitionChanges" value="light"> Lighting changed abruptly</label>
+      <label><input type="checkbox" name="transitionChanges" value="noise"> Noise changed abruptly</label>
+      <label><input type="checkbox" name="transitionChanges" value="compression"> Space became much tighter</label>
+      <label><input type="checkbox" name="transitionChanges" value="expansion"> Space suddenly opened up</label>
+      <label><input type="checkbox" name="transitionChanges" value="noneChanges"> I didn't notice sudden changes</label>
+
+      <div class="form-nav">
+        <button type="button" class="back-btn">Back</button>
+        <button type="button" class="next-btn">Next</button>
+      </div>
+    </section>
+
+    <!-- E. QUIETER AREAS -->
+    <section class="form-step" data-step="8">
+      <h3>Calm Corners</h3>
+
+      <div class="form-group">
+        <label class="no-divider">Were there areas that felt noticeably calmer (quieter, less busy)?</label>
+
+        <label><input type="radio" name="calmAvailability" value="clearly"> Yes, clearly available</label>
+        <label><input type="radio" name="calmAvailability" value="limited"> Yes, but limited</label>
+        <label><input type="radio" name="calmAvailability" value="none"> I didn't notice any</label>
+      </div>
+
+      <div class="form-group">
+        <label>What made those areas calmer?</label>
+        <small>(Select any you noticed)</small>
+
+        <label><input type="checkbox" name="calmFeatures" value="seating"> Seating away from the main flow</label>
+        <label><input type="checkbox" name="calmFeatures" value="dividers"> Partial enclosure (walls/dividers)</label>
+        <label><input type="checkbox" name="calmFeatures" value="lighting"> Dimmer lighting</label>
+        <label><input type="checkbox" name="calmFeatures" value="sound"> Noticeably quieter</label>
+      </div>
+
+      <div class="form-nav">
+        <button type="button" class="back-btn">Back</button>
+        <button type="button" class="next-btn">Next</button>
+      </div>
+    </section>
+
+    <!-- FINAL -->
+    <section class="form-step" data-step="9">
+      <h3>Positive Extraction</h3>
+
+      <div class="form-group">
+        <label>What worked well here?</label>
+        <small>(Pick up to 3)</small>
+
+        <div class="chip-group">
+          <label><input type="checkbox" name="positiveHighlights" value="easy-movement"> Easy to move around</label>
+          <label><input type="checkbox" name="positiveHighlights" value="easy-find"> Easy to find things</label>
+          <label><input type="checkbox" name="positiveHighlights" value="sound"> Comfortable sound</label>
+          <label><input type="checkbox" name="positiveHighlights" value="lighting"> Comfortable lighting</label>
+          <label><input type="checkbox" name="positiveHighlights" value="visual"> Visually calm</label>
+          <label><input type="checkbox" name="positiveHighlights" value="gradual"> Gradual transitions</label>
+          <label><input type="checkbox" name="positiveHighlights" value="quiet-spots"> Nice quieter spots</label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Anything else?</label>
+        <textarea id="positiveNote"></textarea>
+      </div>
+
+      <div class="form-nav">
+        <button type="button" class="back-btn">Back</button>
+        <button type="submit">Submit</button>
+      </div>
+    </section>
+
+    <!-- SUMMARY -->
+    <section class="form-step" data-step="10">
+      <h3>Review submitted</h3>
+      <p>Your review helped define this place as:</p>
+      <div id="reviewSummaryList" class="summary-list"></div>
+      <div class="form-nav">
+        <button type="button" class="close-summary-btn">Done</button>
+      </div>
+    </section>
+
+  </form>
+
+  <!-- JS -->
+  <script src="js/schemas.js"></script>
+  <script type="module" src="js/script.js"></script>
+
+</body>
+</html>
