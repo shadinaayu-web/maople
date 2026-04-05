@@ -67,6 +67,7 @@ html, body {
   height: 100%;
   font-family: 'Lexend', system-ui, sans-serif;
   overflow: hidden;
+  -webkit-text-size-adjust: 100%;
 }
 
 .app-shell {
@@ -1038,7 +1039,7 @@ html, body {
 
   .mapboxgl-ctrl-geocoder input {
     height: 38px;
-    font-size: 13px;
+    font-size: 16px;
   }
 
   .profile-btn {
@@ -1144,6 +1145,11 @@ html, body {
     border-top: 1px solid var(--border);
     border-radius: 16px 16px 0 0;
     box-shadow: 0 -8px 18px rgba(0,0,0,0.1);
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 25;
   }
 
   .dock-grabber {
@@ -1176,7 +1182,6 @@ html, body {
     height: 56px;
   }
 
-  body.search-focus .dock-grabber,
   body.search-focus #filterContent {
     display: none;
   }
@@ -1314,7 +1319,7 @@ html, body {
   }
 
   .quick-filter-chip {
-    font-size: 11px;
+    font-size: 12px;
     padding: 6px 10px;
   }
 
