@@ -1,6 +1,8 @@
 import { state } from "./state.js";
 import { submitPlaceToFirestore } from "./places.js";
 import { refreshApp } from "./app.js";
+import { clearDraftMarker } from "./map.js";
+import { closeSidePanel } from "./panel.js";
 import { computeDimensionScores } from "./reviews.js";
 
 import {
@@ -152,14 +154,21 @@ export async function handleSubmit(e) {
       console.warn("[review] refreshApp failed:", err);
     });
 
-    // cleanup draft marker if exists
-    if (state.draftMarker) {
-      state.draftMarker.remove();
-      state.draftMarker = null;
-    }
+    clearDraftMarker();
 
     renderReviewSummary(reviewData);
     showStep(10);
+
+    const form = document.getElementById("placeForm");
+    if (form) {
+      form.reset();
+      form.style.display = "none";
+    }
+    state.editingPlaceId = null;
+    setPlaceInfoEnabled(true);
+    const panel = document.getElementById("sidePanel");
+    if (panel) panel.classList.remove("reviewing");
+    closeSidePanel();
   } catch (err) {
     console.error("[review] submit failed:", err);
     alert("Something went wrong while submitting. Please try again.");
