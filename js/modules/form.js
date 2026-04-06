@@ -55,6 +55,7 @@ export async function handleSubmit(e) {
     submitBtn.textContent = "Submitting...";
   }
   isSubmitting = true;
+  const submitStart = performance.now();
 
   const name = document.getElementById("placeName").value;
 
@@ -131,25 +132,38 @@ export async function handleSubmit(e) {
     return;
   }
 
-  await submitPlaceToFirestore(
-    {
-      name,
-      category
-    },
-    reviewData
-  );
+  try {
+    console.log("[review] submitting...");
+    const placeId = await submitPlaceToFirestore(
+      {
+        name,
+        category,
+        location:
+          state.addPlaceState?.entranceLocation ||
+          state.selectedLocation ||
+          null
+      },
+      reviewData
+    );
+    console.log("[review] saved to place:", placeId);
 
-  await refreshApp();
+    // Refresh data in background to keep UI responsive
+    refreshApp().catch((err) => {
+      console.warn("[review] refreshApp failed:", err);
+    });
 
+    // cleanup draft marker if exists
+    if (state.draftMarker) {
+      state.draftMarker.remove();
+      state.draftMarker = null;
+    }
 
-  // cleanup draft marker if exists
-  if (state.draftMarker) {
-    state.draftMarker.remove();
-    state.draftMarker = null;
+    renderReviewSummary(reviewData);
+    showStep(10);
+  } catch (err) {
+    console.error("[review] submit failed:", err);
+    alert("Something went wrong while submitting. Please try again.");
   }
-
-  renderReviewSummary(reviewData);
-  showStep(10);
 
   if (submitBtn) {
     submitBtn.disabled = false;
@@ -157,7 +171,7 @@ export async function handleSubmit(e) {
   }
   isSubmitting = false;
 
-  console.log("Review submitted");
+  console.log("Review submitted in", Math.round(performance.now() - submitStart), "ms");
 
 }
 

@@ -97,6 +97,12 @@ export async function getOrCreatePlace(placeData) {
 // ---------- CREATE PLACE + REVIEW ----------
 
 export async function submitPlaceToFirestore(placeData, reviewData) {
+  const startedAt = performance.now();
+  const location = placeData.location || state.selectedLocation || null;
+  const hasExistingId = !!placeData.id || !!state.editingPlaceId;
+  if (!hasExistingId && !location) {
+    throw new Error("Missing location for new place.");
+  }
   const placeId =
     placeData.id ||
     state.editingPlaceId ||
@@ -151,6 +157,7 @@ export async function submitPlaceToFirestore(placeData, reviewData) {
     ...(clearlyCount ? { calmZonesClearlyCount: clearlyCount } : {})
   });
 
+  console.log("[review] firestore updated in", Math.round(performance.now() - startedAt), "ms");
   return placeId;
 
 }
