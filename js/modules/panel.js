@@ -6,11 +6,13 @@ import {
   hasActiveFilters,
   getGroupMatchSummary,
   getGroupMatchLabel,
-  getGroupReasons
+  getGroupReasons,
+  collapseDockForMobile,
+  collapsePlaceSheet,
+  expandPlaceSheet
 } from "./filters.js";
 import { openAddReviewForm, cancelReview } from "./search.js";
 import { getMap } from "./map.js";
-import { collapseDockForMobile, expandPlaceSheet } from "./filters.js";
 
 import {
   collection,
@@ -509,11 +511,15 @@ export function closeSidePanel() {
   const panel = document.getElementById("sidePanel");
   const tab = document.getElementById("sidePanelTab");
   if (!panel) return;
+  const isMobile = window.matchMedia("(max-width: 768px)").matches;
 
   panel.classList.remove("active");
+  if (isMobile) {
+    collapsePlaceSheet();
+  }
 
   const hasContent = panel.querySelector("#panelContent")?.innerHTML?.trim();
-  if (tab && hasContent) {
+  if (tab && hasContent && !isMobile) {
     tab.classList.add("visible");
   }
 
@@ -529,6 +535,7 @@ document
     const panel = document.getElementById("sidePanel");
     const tab = document.getElementById("sidePanelTab");
     if (panel) panel.classList.add("active");
+    expandPlaceSheet();
     if (tab) tab.classList.remove("visible");
   });
 

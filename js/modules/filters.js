@@ -125,6 +125,11 @@ let groupStepIndex = 0;
 let groupDraftMembers = [];
 let setDockHeightFn = null;
 let setPlaceSheetHeightFn = null;
+const MOBILE_BREAKPOINT = "(max-width: 768px)";
+
+function isMobileViewport() {
+  return window.matchMedia(MOBILE_BREAKPOINT).matches;
+}
 
 export function requestFilterPulse() {
   filterPulseRequested = true;
@@ -878,13 +883,16 @@ function initDock(dock) {
   const collapsed = 56;
   const getExpanded = () => Math.min(420, Math.round(window.innerHeight * 0.6));
   const getMid = () => Math.min(260, Math.round(window.innerHeight * 0.35));
-  const isMobile = () => window.matchMedia("(max-width: 768px)").matches;
+  const grabber = dock.querySelector(".dock-grabber");
+  if (!grabber) return;
 
   let expanded = getExpanded();
   let mid = getMid();
   let startY = 0;
   let startH = collapsed;
   let dragging = false;
+  let dragDistance = 0;
+  let suppressClickUntil = 0;
 
   const setHeight = (h) => {
     const clamped = Math.max(collapsed, Math.min(expanded, h));
@@ -895,7 +903,7 @@ function initDock(dock) {
 
   setDockHeightFn = (mode) => {
     if (mode === "expand") {
-      setHeight(isMobile() ? mid : expanded);
+      setHeight(isMobileViewport() ? mid : expanded);
     } else if (mode === "collapse") {
       setHeight(collapsed);
     }
@@ -904,17 +912,20 @@ function initDock(dock) {
   setHeight(collapsed);
 
   const startDrag = (e) => {
-    if (e.target.closest(".quick-filter-chip")) return;
-    if (e.target.closest(".quick-filters")) return;
+    if (e.pointerType === "mouse" && e.button !== 0) return;
     dragging = true;
+    dragDistance = 0;
     startY = e.clientY;
     startH = parseFloat(getComputedStyle(dock).height) || collapsed;
-    dock.setPointerCapture?.(e.pointerId);
+    grabber.setPointerCapture?.(e.pointerId);
+    e.preventDefault();
+    e.stopPropagation();
   };
 
   const onMove = (e) => {
     if (!dragging) return;
     const delta = startY - e.clientY;
+    dragDistance = Math.max(dragDistance, Math.abs(delta));
     setHeight(startH + delta);
   };
 
@@ -922,7 +933,7 @@ function initDock(dock) {
     if (!dragging) return;
     dragging = false;
     const current = parseFloat(getComputedStyle(dock).height) || collapsed;
-    if (isMobile()) {
+    if (isMobileViewport()) {
       const snapPoints = [collapsed, mid, expanded];
       const nearest = snapPoints.reduce((prev, val) =>
         Math.abs(val - current) < Math.abs(prev - current) ? val : prev
@@ -935,42 +946,33 @@ function initDock(dock) {
       setHeight(next);
       adjustPanelForDock(next);
     }
-    dock.releasePointerCapture?.(e.pointerId);
+    if (dragDistance > 6) {
+      suppressClickUntil = Date.now() + 220;
+    }
+    grabber.releasePointerCapture?.(e.pointerId);
   };
 
-  dock.addEventListener("pointerdown", startDrag);
-  dock.addEventListener("pointermove", onMove);
-  dock.addEventListener("pointerup", endDrag);
-  dock.addEventListener("pointercancel", endDrag);
-
-  const grabber = dock.querySelector(".dock-grabber");
-  if (grabber) {
-    grabber.addEventListener("click", () => {
-      const current = parseFloat(getComputedStyle(dock).height) || collapsed;
-      if (isMobile()) {
-        const snapPoints = [collapsed, mid, expanded];
-        const index = snapPoints.findIndex(val => Math.abs(val - current) < 2);
-        const next = snapPoints[(index + 1) % snapPoints.length] || collapsed;
-        setHeight(next);
-        adjustPanelForDock(next);
-      } else {
-        setHeight(current > collapsed + 20 ? collapsed : expanded);
-      }
-    });
-  }
-
-  dock.addEventListener("dblclick", () => {
+  const expandFromGrabber = (e) => {
+    if (Date.now() < suppressClickUntil) return;
+    e.preventDefault();
+    e.stopPropagation();
     const current = parseFloat(getComputedStyle(dock).height) || collapsed;
-    if (isMobile()) {
-      const snapPoints = [collapsed, mid, expanded];
-      const index = snapPoints.findIndex(val => Math.abs(val - current) < 2);
-      const next = snapPoints[(index + 1) % snapPoints.length] || collapsed;
+    if (isMobileViewport()) {
+      const next = current < mid - 2 ? mid : expanded;
       setHeight(next);
       adjustPanelForDock(next);
     } else {
-      setHeight(current > collapsed + 20 ? collapsed : expanded);
+      if (current <= collapsed + 20) {
+        setHeight(expanded);
+      }
     }
-  });
+  };
+
+  grabber.addEventListener("pointerdown", startDrag);
+  grabber.addEventListener("pointermove", onMove);
+  grabber.addEventListener("pointerup", endDrag);
+  grabber.addEventListener("pointercancel", endDrag);
+  grabber.addEventListener("click", expandFromGrabber);
 
   window.addEventListener("resize", () => {
     expanded = getExpanded();
@@ -984,8 +986,8 @@ function initDock(dock) {
 function adjustPanelForDock(dockHeight) {
   const panel = document.getElementById("sidePanel");
   if (!panel) return;
-  if (window.matchMedia("(max-width: 768px)").matches) {
-    panel.style.bottom = `calc(${dockHeight}px + env(safe-area-inset-bottom))`;
+  if (isMobileViewport()) {
+    panel.style.bottom = "";
   } else {
     panel.style.bottom = "";
   }
@@ -998,72 +1000,100 @@ export function initPlaceSheet() {
   const handle = panel?.querySelector(".panel-handle");
   if (!panel || !handle) return;
 
-  const root = document.documentElement;
-  const collapsed = () => Math.round(window.innerHeight * 0.32);
-  const mid = () => Math.round(window.innerHeight * 0.56);
-  const expanded = () => Math.round(window.innerHeight * 0.78);
-  const isMobile = () => window.matchMedia("(max-width: 768px)").matches;
+  const peek = () => 120;
+  const mid = () => Math.round(window.innerHeight * 0.68);
+  const expanded = () => Math.round(window.innerHeight * 0.88);
+  const closeThreshold = () => Math.round(window.innerHeight * 0.34);
 
   let startY = 0;
   let startH = 0;
   let dragging = false;
+  let dragDistance = 0;
+  let suppressClickUntil = 0;
 
-  const setHeight = (h) => {
-    if (!isMobile()) return;
-    const clamped = Math.max(collapsed(), Math.min(expanded(), h));
+  const clearHeight = () => {
+    panel.style.height = "";
+    panel.classList.remove("compact");
+  };
+
+  const setHeight = (h, options = {}) => {
+    if (!isMobileViewport()) return;
+    const lowerBound = options.allowPeek ? peek() : mid();
+    const clamped = Math.max(lowerBound, Math.min(expanded(), h));
     panel.style.height = `${clamped}px`;
-    panel.classList.toggle("compact", clamped <= collapsed() + 4);
+    panel.classList.remove("compact");
   };
 
   setPlaceSheetHeightFn = (mode) => {
-    if (!isMobile()) return;
-    if (mode === "collapse") setHeight(collapsed());
+    if (!isMobileViewport()) return;
+    if (mode === "collapse") {
+      clearHeight();
+      return;
+    }
     if (mode === "mid") setHeight(mid());
     if (mode === "expand") setHeight(expanded());
   };
 
   const startDrag = (e) => {
-    if (!isMobile()) return;
+    if (!isMobileViewport()) return;
+    if (e.pointerType === "mouse" && e.button !== 0) return;
     dragging = true;
+    dragDistance = 0;
     startY = e.clientY;
-    startH = parseFloat(getComputedStyle(panel).height) || collapsed();
-    panel.setPointerCapture?.(e.pointerId);
+    startH = parseFloat(getComputedStyle(panel).height) || mid();
+    handle.setPointerCapture?.(e.pointerId);
+    e.preventDefault();
+    e.stopPropagation();
   };
 
   const onMove = (e) => {
     if (!dragging) return;
     const delta = startY - e.clientY;
-    setHeight(startH + delta);
+    dragDistance = Math.max(dragDistance, Math.abs(delta));
+    setHeight(startH + delta, { allowPeek: true });
   };
 
   const endDrag = (e) => {
     if (!dragging) return;
     dragging = false;
-    const current = parseFloat(getComputedStyle(panel).height) || collapsed();
-    const snapPoints = [collapsed(), mid(), expanded()];
-    const nearest = snapPoints.reduce((prev, val) =>
-      Math.abs(val - current) < Math.abs(prev - current) ? val : prev
-    );
-    setHeight(nearest);
-    panel.classList.toggle("compact", nearest <= collapsed() + 4);
-    panel.releasePointerCapture?.(e.pointerId);
+    const current = parseFloat(getComputedStyle(panel).height) || mid();
+    if (current <= closeThreshold()) {
+      collapsePlaceSheet();
+    } else {
+      const next = current > (mid() + expanded()) / 2 ? expanded() : mid();
+      setHeight(next);
+    }
+    if (dragDistance > 6) {
+      suppressClickUntil = Date.now() + 220;
+    }
+    handle.releasePointerCapture?.(e.pointerId);
   };
 
   handle.addEventListener("pointerdown", startDrag);
-  panel.addEventListener("pointermove", onMove);
-  panel.addEventListener("pointerup", endDrag);
-  panel.addEventListener("pointercancel", endDrag);
+  handle.addEventListener("pointermove", onMove);
+  handle.addEventListener("pointerup", endDrag);
+  handle.addEventListener("pointercancel", endDrag);
 
-  handle.addEventListener("click", () => {
-    if (!isMobile()) return;
-    setHeight(mid());
+  handle.addEventListener("click", (e) => {
+    if (!isMobileViewport() || Date.now() < suppressClickUntil) return;
+    e.preventDefault();
+    e.stopPropagation();
+    const current = parseFloat(getComputedStyle(panel).height) || mid();
+    setHeight(current < expanded() - 8 ? expanded() : mid());
   });
 
   window.addEventListener("resize", () => {
-    if (!isMobile()) {
-      panel.style.height = "";
+    if (!isMobileViewport()) {
+      clearHeight();
+      document.body.classList.remove("mobile-panel-open");
       return;
     }
+    if (!panel.classList.contains("active")) {
+      clearHeight();
+      document.body.classList.remove("mobile-panel-open");
+      return;
+    }
+    document.body.classList.add("mobile-panel-open");
     setHeight(Math.min(parseFloat(getComputedStyle(panel).height) || mid(), expanded()));
   });
 }
@@ -1073,10 +1103,30 @@ export function collapseDockForMobile() {
 }
 
 export function collapsePlaceSheet() {
+  const panel = document.getElementById("sidePanel");
+  document.body.classList.remove("mobile-panel-open");
+  if (isMobileViewport() && panel) {
+    panel.classList.remove("active");
+    panel.classList.remove("compact");
+    panel.style.height = "";
+    panel.style.bottom = "";
+    return;
+  }
+  if (panel) {
+    panel.classList.remove("compact");
+    panel.style.height = "";
+  }
   if (setPlaceSheetHeightFn) setPlaceSheetHeightFn("collapse");
 }
 
 export function expandPlaceSheet() {
+  if (!isMobileViewport()) return;
+  document.body.classList.add("mobile-panel-open");
+  const panel = document.getElementById("sidePanel");
+  if (panel) {
+    panel.classList.remove("compact");
+    panel.style.bottom = "";
+  }
   if (setPlaceSheetHeightFn) setPlaceSheetHeightFn("mid");
 }
 

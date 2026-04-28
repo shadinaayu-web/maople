@@ -7,6 +7,7 @@ import {
 import { state } from "./state.js";
 import { findExistingPlace } from "./places.js";
 import { openSidePanel } from "./panel.js";
+import { collapseDockForMobile, collapsePlaceSheet, expandPlaceSheet } from "./filters.js";
 
 // Track if we're in "add place" mode
 let isAddingPlace = false;
@@ -888,6 +889,8 @@ function openFormInSidePanel(titleText) {
   content.appendChild(form);
   panel.classList.add("active");
   panel.classList.add("reviewing");
+  collapseDockForMobile();
+  expandPlaceSheet();
   if (tab) tab.classList.remove("visible");
 }
 
@@ -913,6 +916,7 @@ function exitAddPlaceMode() {
   const panel = document.getElementById("sidePanel");
   if (panel) panel.classList.remove("active");
   if (panel) panel.classList.remove("reviewing");
+  collapsePlaceSheet();
 
   if (activeMapClickHandler) {
     const map = getMap();
