@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -39,7 +39,7 @@
     </header>
 
     <button id="review-place-btn" style="display:none;">
-      📍 Review this place
+      ðŸ“ Review this place
     </button>
 
     <div id="addPlacePrompt" class="add-place-ui" style="display:none">
@@ -96,7 +96,7 @@
     <div id="searchForSpecificUI" class="search-instruction-ui" style="display:none">
       <div class="instruction-content">
         <button id="closeAddModeBtn" type="button" class="close-ui-btn" aria-label="Exit add mode">
-          ×
+          Ã—
         </button>
         <h3>Search for a specific place</h3>
         <p>You're in <strong class="area-name"></strong>. Place you're looking for not here?</p>
@@ -126,7 +126,7 @@
             Cancel review
           </button>
           <button id="closePanelBtn" class="panel-icon-btn" aria-label="Hide panel">
-            ✕
+            &times;
           </button>
         </div>
       </div>
@@ -208,10 +208,10 @@
 
     <!-- INTRO -->
     <section class="form-step active" data-step="0">
-      <h3>How did this place feel?</h3>
-      <p>Your answers help people find places that fit their day — whether they want somewhere calm to work, lively for friends, or easy to navigate.</p>
+      <h3>How was this place, really?</h3>
+      <p>A quick note for your future self (and others)</p>
       <div class="form-nav">
-        <button type="button" class="start-review-btn">Start review →</button>
+        <button type="button" class="start-review-btn">Start (~1 min)</button>
       </div>
     </section>
 
@@ -241,52 +241,20 @@
           <option value="other">Other</option>
         </select>
       </label>
-
-      <!-- Quick Access -->
-      <p>Quick access check</p>
-      <label><input type="checkbox" name="quickAccess" value="step-free"> Step-free entrance</label>
-      <label><input type="checkbox" name="quickAccess" value="ramp"> Ramp</label>
-      <label><input type="checkbox" name="quickAccess" value="lift"> Lift</label>
-      <label><input type="checkbox" name="quickAccess" value="escalator"> Escalator</label>
-      <label><input type="checkbox" name="quickAccess" value="stairs-only"> Stairs only</label>
-
       <div class="form-nav">
         <button type="button" class="next-btn">Next</button>
       </div>
     </section>
 
-    <!-- A. MOVEMENT & LAYOUT -->
+    <!-- CHAPTER 1. YOUR VISIT / SCREEN 1 -->
     <section class="form-step" data-step="2">
-      <h3>Moving Around</h3>
+      <p class="form-chapter-label">Your visit</p>
+      <h3>When did you go?</h3>
 
-      <!-- Continuity Bar -->
-      <p>How did it feel to move through this place?</p>
-      <small>Think about whether you moved smoothly or had to stop and figure things out.</small>
-      <input type="range" min="1" max="5" id="movementContinuity">
-
-      <!-- Statement container -->
-      <p>Which of these felt true?</p>
-      <small class="no-divider">Swipe right to agree, left to disagree.</small>
-      <div id="movementStatements">
-        <div class="statement-chip"
-         data-statement="see-next"
-         data-value="neutral">
-         I could usually see where to go next
-        </div>
-
-        <div class="statement-chip"
-         data-statement="hesitated"
-         data-value="neutral">
-          I hesitated at intersections
-        </div>
-        
-        <div class="statement-chip"
-         data-statement="reorient"
-         data-value="neutral">
-          I had to stop and figure out where to go
-        </div>
-      
-      </div>
+      <label><input type="radio" name="visitTime" value="morning"> Morning</label>
+      <label><input type="radio" name="visitTime" value="afternoon"> Afternoon</label>
+      <label><input type="radio" name="visitTime" value="evening"> Evening</label>
+      <label><input type="radio" name="visitTime" value="night"> Night</label>
 
       <div class="form-nav">
         <button type="button" class="back-btn">Back</button>
@@ -294,39 +262,18 @@
       </div>
     </section>
 
-    <!-- B. KNOWING WHERE THINGS WERE -->
+    <!-- CHAPTER 1. YOUR VISIT / SCREEN 2 -->
     <section class="form-step" data-step="3">
-      <h3>Finding Your Way</h3>
+      <p class="form-chapter-label">Your visit</p>
+      <h3>How were you visiting?</h3>
+      <small>(Pick up to 2)</small>
 
-      <!-- Wayfinding Bar -->
-      <p>How easy was it to find what you need?</p>
-      <small>For example the counter, restroom, entrance, or different areas.</small>
-      <input type="range" min="1" max="5" id="understandingBar">
-
-      <!-- Statement container -->
-      <p>Which of these felt true?</p>
-      <small class="no-divider">Swipe right to agree, left to disagree.</small>
-      <div id="wayfindingStatements">
-
-        <div class="statement-chip"
-         data-statement="find-things"
-         data-value="neutral">
-          I could quickly find important places
-        </div>
-
-        <div class="statement-chip"
-         data-statement="distinct-areas"
-         data-value="neutral">
-          Different areas felt easy to tell apart
-        </div>
-
-        <div class="statement-chip"
-         data-statement="search-things"
-         data-value="neutral">
-          I had to look around or search for things
-        </div>
-
-      </div>
+      <label><input type="checkbox" name="visitCompanions" value="alone"> Alone</label>
+      <label><input type="checkbox" name="visitCompanions" value="with-others"> With others</label>
+      <label><input type="checkbox" name="visitCompanions" value="with-kids"> With kids</label>
+      <label><input type="checkbox" name="visitCompanions" value="with-kids-strollers"> With kids in strollers</label>
+      <label><input type="checkbox" name="visitCompanions" value="wheelchair-mobility-aid"> Using wheelchair / mobility aid</label>
+      <label><input type="checkbox" name="visitCompanions" value="carrying-a-lot"> Carrying a lot</label>
 
       <div class="form-nav">
         <button type="button" class="back-btn">Back</button>
@@ -334,25 +281,14 @@
       </div>
     </section>
 
-    <!-- C1. SOUND -->
+    <!-- CHAPTER 1. YOUR VISIT / SCREEN 3 -->
     <section class="form-step" data-step="4">
-      <h3>Sound</h3>
+      <p class="form-chapter-label">Your visit</p>
+      <h3>How busy did it feel?</h3>
 
-      <!-- Sound Bar -->
-      <p>How did the sound level feel overall?</p>
-      <input type="range" min="1" max="5" id="soundOverall">
-
-      <label>Could you comfortably have a conversation here?</label>
-      <label><input type="radio" name="conversationComfort" value="yes"> Yes</label>
-      <label><input type="radio" name="conversationComfort" value="lean"> Only if I leaned in</label>
-      <label><input type="radio" name="conversationComfort" value="no"> No</label>
-
-      <label>What stood out about the sound here?</label>
-      <label><input type="checkbox" name="soundComponent" value="backgroundMusic"> Background music was loud</label>
-      <label><input type="checkbox" name="soundComponent" value="crowdNoise"> Crowd noise was loud</label>
-      <label><input type="checkbox" name="soundComponent" value="suddenLoud"> Sudden loud moments happened</label>
-      <label><input type="checkbox" name="soundComponent" value="soundEcho"> Sound echoed in the space</label>
-      <label><input type="checkbox" name="soundComponent" value="noneSound"> None of these</label>
+      <label><input type="radio" name="visitBusyLevel" value="quiet"> Quiet</label>
+      <label><input type="radio" name="visitBusyLevel" value="moderate"> Moderate</label>
+      <label><input type="radio" name="visitBusyLevel" value="busy"> Busy</label>
 
       <div class="form-nav">
         <button type="button" class="back-btn">Back</button>
@@ -360,19 +296,16 @@
       </div>
     </section>
 
-    <!-- C2. LIGHTING -->
+    <!-- CHAPTER 2. ARRIVING / SCREEN 4 -->
     <section class="form-step" data-step="5">
-      <h3>Lighting</h3>
+      <p class="form-chapter-label">Arriving</p>
+      <h3>When you first walked in, what was it like?</h3>
 
-      <label>How comfortable did the lighting feel?</label>
-      <input type="range" min="1" max="5" id="lightingOverall">
-
-      <label>How did lighting affect what you were doing?</label>
-      <label><input type="checkbox" name="lightingComponent" value="readable"> I could comfortably read or look at my phone</label>
-      <label><input type="checkbox" name="lightingComponent" value="glaring"> Lighting felt harsh or glaring</label>
-      <label><input type="checkbox" name="lightingComponent" value="dim"> Lighting felt too dim</label>
-      <label><input type="checkbox" name="lightingComponent" value="lightingChange"> Lighting changed a lot between areas</label>
-      <label><input type="checkbox" name="lightingComponent" value="noneLighting"> I didn’t notice the lighting much</label>
+      <label><input type="radio" name="arrivingEntryExperience" value="flat-easy"> Flat and easy</label>
+      <label><input type="radio" name="arrivingEntryExperience" value="small-step"> Small step</label>
+      <label><input type="radio" name="arrivingEntryExperience" value="several-steps"> Several steps</label>
+      <label><input type="radio" name="arrivingEntryExperience" value="ramp-available"> Ramp available</label>
+      <label><input type="radio" name="arrivingEntryExperience" value="stairs-steep-no-ramp"> Only stairs, steep / no ramp</label>
 
       <div class="form-nav">
         <button type="button" class="back-btn">Back</button>
@@ -380,19 +313,15 @@
       </div>
     </section>
 
-    <!-- C3. VISUAL -->
+    <!-- CHAPTER 2. ARRIVING / SCREEN 5 -->
     <section class="form-step" data-step="6">
-      <h3>Visual Feel</h3>
+      <p class="form-chapter-label">Arriving</p>
+      <h3>What was the ground like at the entrance?</h3>
 
-      <label>How visually busy did the space feel?</label>
-      <input type="range" min="1" max="5" id="visualLoadLevel">
-
-      <label>What made the space feel visually busy?</label>
-      <label><input type="checkbox" name="visualComponent" value="decorative"> Many decorative objects</label>
-      <label><input type="checkbox" name="visualComponent" value="patterns"> Lots of patterns or textures</label>
-      <label><input type="checkbox" name="visualComponent" value="brightColors"> Bright colors or strong contrasts</label>
-      <label><input type="checkbox" name="visualComponent" value="movingThings"> Many moving things (screens, people, displays)</label>
-      <label><input type="checkbox" name="visualComponent" value="noneVisual"> Space felt visually calm</label>
+      <label><input type="radio" name="arrivingGroundCondition" value="smooth"> Smooth</label>
+      <label><input type="radio" name="arrivingGroundCondition" value="slightly-uneven"> Slightly uneven</label>
+      <label><input type="radio" name="arrivingGroundCondition" value="rough-bumpy"> Rough / bumpy</label>
+      <label><input type="radio" name="arrivingGroundCondition" value="slippery"> Slippery</label>
 
       <div class="form-nav">
         <button type="button" class="back-btn">Back</button>
@@ -400,16 +329,18 @@
       </div>
     </section>
 
-    <!-- D. SUDDEN CHANGES -->
+    <!-- CHAPTER 2. ARRIVING / SCREEN 6 -->
     <section class="form-step" data-step="7">
-      <h3>Changes Between Areas</h3>
+      <p class="form-chapter-label">Arriving</p>
+      <h3>Anything that made entering harder?</h3>
+      <small>(Pick what stood out)</small>
 
-      <label class="no-divider">Did anything change suddenly as you moved around?</label>
-      <label><input type="checkbox" name="transitionChanges" value="light"> Lighting changed abruptly</label>
-      <label><input type="checkbox" name="transitionChanges" value="noise"> Noise changed abruptly</label>
-      <label><input type="checkbox" name="transitionChanges" value="compression"> Space became much tighter</label>
-      <label><input type="checkbox" name="transitionChanges" value="expansion"> Space suddenly opened up</label>
-      <label><input type="checkbox" name="transitionChanges" value="noneChanges"> I didn't notice sudden changes</label>
+      <label><input type="checkbox" name="arrivingEntryBarriers" value="step-level-change"> Step or level change</label>
+      <label><input type="checkbox" name="arrivingEntryBarriers" value="narrow-entrance"> Narrow entrance</label>
+      <label><input type="checkbox" name="arrivingEntryBarriers" value="slippery-surface"> Slippery surface</label>
+      <label><input type="checkbox" name="arrivingEntryBarriers" value="heavy-door"> Heavy door</label>
+      <label><input type="checkbox" name="arrivingEntryBarriers" value="hard-find-entrance"> Hard to tell where to enter</label>
+      <label><input type="checkbox" name="arrivingEntryBarriers" value="nope-all-good"> Nope, all good</label>
 
       <div class="form-nav">
         <button type="button" class="back-btn">Back</button>
@@ -417,26 +348,451 @@
       </div>
     </section>
 
-    <!-- E. QUIETER AREAS -->
+    <!-- CHAPTER 3. MOVING AROUND / SCREEN 7 -->
     <section class="form-step" data-step="8">
-      <h3>Calm Corners</h3>
+      <p class="form-chapter-label">Moving around</p>
+      <h3>As you moved through the space, it was ...</h3>
 
-      <div class="form-group">
-        <label class="no-divider">Were there areas that felt noticeably calmer (quieter, less busy)?</label>
+      <label><input type="radio" name="movingFlowFeel" value="smooth-all-the-way"> Smooth all the way</label>
+      <label><input type="radio" name="movingFlowFeel" value="slowed-down-few-times"> Slowed down a few times</label>
+      <label><input type="radio" name="movingFlowFeel" value="stopped-to-figure-out"> Had to stop and figure things out</label>
 
-        <label><input type="radio" name="calmAvailability" value="clearly"> Yes, clearly available</label>
-        <label><input type="radio" name="calmAvailability" value="limited"> Yes, but limited</label>
-        <label><input type="radio" name="calmAvailability" value="none"> I didn't notice any</label>
+      <div class="form-nav">
+        <button type="button" class="back-btn">Back</button>
+        <button type="button" class="next-btn">Next</button>
       </div>
+    </section>
 
-      <div class="form-group">
-        <label>What made those areas calmer?</label>
-        <small>(Select any you noticed)</small>
+    <!-- CHAPTER 3. MOVING AROUND / SCREEN 8 -->
+    <section class="form-step" data-step="9">
+      <p class="form-chapter-label">Moving around</p>
+      <h3>What slowed you down?</h3>
+      <small>(Pick up to 2)</small>
 
-        <label><input type="checkbox" name="calmFeatures" value="seating"> Seating away from the main flow</label>
-        <label><input type="checkbox" name="calmFeatures" value="dividers"> Partial enclosure (walls/dividers)</label>
-        <label><input type="checkbox" name="calmFeatures" value="lighting"> Dimmer lighting</label>
-        <label><input type="checkbox" name="calmFeatures" value="sound"> Noticeably quieter</label>
+      <label><input type="checkbox" name="movingSlowFactors" value="steps-level-changes"> Steps or level changes</label>
+      <label><input type="checkbox" name="movingSlowFactors" value="tight-narrow-spaces"> Tight or narrow spaces</label>
+      <label><input type="checkbox" name="movingSlowFactors" value="people-blocking-way"> People blocking the way</label>
+      <label><input type="checkbox" name="movingSlowFactors" value="slippery-uneven-floor"> Slippery / uneven floor</label>
+      <label><input type="checkbox" name="movingSlowFactors" value="nothing-easy"> Nothing, it was easy to move around</label>
+
+      <div class="form-nav">
+        <button type="button" class="back-btn">Back</button>
+        <button type="button" class="next-btn">Next</button>
+      </div>
+    </section>
+
+    <!-- CHAPTER 4. REACHING THINGS / SCREEN 9 -->
+    <section class="form-step" data-step="10">
+      <p class="form-chapter-label">Reaching things</p>
+      <h3>Getting to things (counter, toilet, seating) was ...</h3>
+
+      <label><input type="radio" name="movingGettingToThings" value="easy-without-thinking"> Easy without thinking</label>
+      <label><input type="radio" name="movingGettingToThings" value="took-some-effort"> Took some effort</label>
+      <label><input type="radio" name="movingGettingToThings" value="had-to-stop-or-go-around"> Had to stop or go around</label>
+
+      <div class="form-nav">
+        <button type="button" class="back-btn">Back</button>
+        <button type="button" class="next-btn">Next</button>
+      </div>
+    </section>
+
+    <!-- CHAPTER 4. REACHING THINGS / SCREEN 10 -->
+    <section class="form-step" data-step="11">
+      <p class="form-chapter-label">Reaching things</p>
+      <h3>What made it harder?</h3>
+      <small>(Pick all that applies)</small>
+
+      <label><input type="checkbox" name="movingHarderFactors" value="steps-along-way"> Steps along the way</label>
+      <label><input type="checkbox" name="movingHarderFactors" value="blocked-or-narrow-path"> Path was blocked or narrow</label>
+      <label><input type="checkbox" name="movingHarderFactors" value="longer-route"> Had to take a longer route</label>
+      <label><input type="checkbox" name="movingHarderFactors" value="couldnt-see-where-to-go"> Couldnâ€™t see where to go</label>
+      <label><input type="checkbox" name="movingHarderFactors" value="too-crowded"> Too crowded</label>
+
+      <div class="form-nav">
+        <button type="button" class="back-btn">Back</button>
+        <button type="button" class="next-btn">Next</button>
+      </div>
+    </section>
+
+    <!-- CHAPTER 5. WHAT YOU NOTICED / SCREEN 11 -->
+    <section class="form-step" data-step="12">
+      <p class="form-chapter-label">What you noticed</p>
+      <h3>Looking back, did you notice any of these?</h3>
+      <small>(Pick everything you noticed)</small>
+
+      <label><input type="checkbox" name="movingObservedConditions" value="steps-level-changes"> Steps or level changes</label>
+      <label><input type="checkbox" name="movingObservedConditions" value="slopes-ramps"> Slopes or ramps</label>
+      <label><input type="checkbox" name="movingObservedConditions" value="slippery-spots"> Slippery spots</label>
+      <label><input type="checkbox" name="movingObservedConditions" value="uneven-bumpy-floor"> Uneven / bumpy floors</label>
+      <label><input type="checkbox" name="movingObservedConditions" value="tight-passages"> Tight passages</label>
+      <label><input type="checkbox" name="movingObservedConditions" value="none"> None of these</label>
+
+      <div class="form-nav">
+        <button type="button" class="back-btn">Back</button>
+        <button type="button" class="next-btn">Next</button>
+      </div>
+    </section>
+
+    <!-- CHAPTER 6. LEVELS & FACILITIES / SCREEN 12 -->
+    <section class="form-step" data-step="13">
+      <p class="form-chapter-label">Levels & facilities</p>
+      <h3>If there were different levels, what options were available to move between them?</h3>
+      <small>(Pick everything available)</small>
+
+      <label><input type="checkbox" name="levelsInterLevelAccess" value="no-level-changes"> No level changes</label>
+      <label><input type="checkbox" name="levelsInterLevelAccess" value="ramp"> Ramp</label>
+      <label><input type="checkbox" name="levelsInterLevelAccess" value="lift-elevator"> Lift / elevator</label>
+      <label><input type="checkbox" name="levelsInterLevelAccess" value="escalator"> Escalator</label>
+      <label><input type="checkbox" name="levelsInterLevelAccess" value="stairs"> Stairs</label>
+
+      <div class="form-nav">
+        <button type="button" class="back-btn">Back</button>
+        <button type="button" class="next-btn">Next</button>
+      </div>
+    </section>
+
+    <!-- CHAPTER 6. LEVELS & FACILITIES / SCREEN 13 -->
+    <section class="form-step" data-step="14">
+      <p class="form-chapter-label">Levels & facilities</p>
+      <h3>How did the ramp feel?</h3>
+
+      <label><input type="radio" name="levelsRampFeel" value="easy-to-use"> Easy to use</label>
+      <label><input type="radio" name="levelsRampFeel" value="steep-difficult"> Steep / difficult</label>
+      <label><input type="radio" name="levelsRampFeel" value="not-sure"> Not sure</label>
+      <label><input type="radio" name="levelsRampFeel" value="didnt-use"> I didn’t use it</label>
+
+      <div class="form-nav">
+        <button type="button" class="back-btn">Back</button>
+        <button type="button" class="next-btn">Next</button>
+      </div>
+    </section>
+
+    <!-- CHAPTER 6. LEVELS & FACILITIES / SCREEN 14 -->
+    <section class="form-step" data-step="15">
+      <p class="form-chapter-label">Levels & facilities</p>
+      <h3>Did you notice any of these helpful features?</h3>
+      <small>(Pick everything you noticed)</small>
+
+      <label><input type="checkbox" name="levelsHelpfulFeatures" value="accessible-toilet"> Accessible toilet</label>
+      <label><input type="checkbox" name="levelsHelpfulFeatures" value="handrails"> Handrails</label>
+      <label><input type="checkbox" name="levelsHelpfulFeatures" value="seating-resting-spots"> Seating / resting spots</label>
+      <label><input type="checkbox" name="levelsHelpfulFeatures" value="clear-signs-directions"> Clear signs or directions</label>
+      <label><input type="checkbox" name="levelsHelpfulFeatures" value="quiet-calmer-area"> Quiet / calmer area</label>
+      <label><input type="checkbox" name="levelsHelpfulFeatures" value="none-available"> None available</label>
+
+      <div class="form-nav">
+        <button type="button" class="back-btn">Back</button>
+        <button type="button" class="next-btn">Next</button>
+      </div>
+    </section>
+
+    <!-- CHAPTER 7. FINDING YOUR WAY / SCREEN 15 -->
+    <section class="form-step" data-step="16">
+      <p class="form-chapter-label">Finding your way</p>
+      <h3>Did you ever feel unsure where to go?</h3>
+
+      <label><input type="radio" name="wayfindingUnsureLevel" value="no"> No</label>
+      <label><input type="radio" name="wayfindingUnsureLevel" value="a-little"> A little</label>
+      <label><input type="radio" name="wayfindingUnsureLevel" value="yes"> Yes</label>
+
+      <div class="form-nav">
+        <button type="button" class="back-btn">Back</button>
+        <button type="button" class="next-btn">Next</button>
+      </div>
+    </section>
+
+    <!-- CHAPTER 7. FINDING YOUR WAY / SCREEN 16 -->
+    <section class="form-step" data-step="17">
+      <p class="form-chapter-label">Finding your way</p>
+      <h3>What made it confusing?</h3>
+      <small>(Pick all that apply)</small>
+
+      <label><input type="checkbox" name="wayfindingConfusingFactors" value="layout-not-clear"> Layout wasn't clear</label>
+      <label><input type="checkbox" name="wayfindingConfusingFactors" value="signs-missing-hard-read"> Signs missing or hard to read</label>
+      <label><input type="checkbox" name="wayfindingConfusingFactors" value="important-areas-not-visible"> Important areas not visible</label>
+      <label><input type="checkbox" name="wayfindingConfusingFactors" value="no-clear-path"> No clear path to follow</label>
+
+      <div class="form-nav">
+        <button type="button" class="back-btn">Back</button>
+        <button type="button" class="next-btn">Next</button>
+      </div>
+    </section>
+
+    <!-- CHAPTER 7. FINDING YOUR WAY / SCREEN 17 -->
+    <section class="form-step" data-step="18">
+      <p class="form-chapter-label">Finding your way</p>
+      <h3>Were signs or menus easy to understand?</h3>
+
+      <label><input type="radio" name="wayfindingSignsClarity" value="very-clear"> Very clear</label>
+      <label><input type="radio" name="wayfindingSignsClarity" value="took-some-effort"> Took some effort</label>
+      <label><input type="radio" name="wayfindingSignsClarity" value="hard-to-understand"> Hard to understand</label>
+
+      <div class="form-nav">
+        <button type="button" class="back-btn">Back</button>
+        <button type="button" class="next-btn">Next</button>
+      </div>
+    </section>
+
+    <!-- CHAPTER 7. FINDING YOUR WAY / SCREEN 18 -->
+    <section class="form-step" data-step="19">
+      <p class="form-chapter-label">Finding your way</p>
+      <h3>What made it hard to understand?</h3>
+      <small>(Pick all that apply)</small>
+
+      <label><input type="checkbox" name="wayfindingHardFactors" value="text-too-small"> Text too small</label>
+      <label><input type="checkbox" name="wayfindingHardFactors" value="wording-unclear"> Wording unclear</label>
+      <label><input type="checkbox" name="wayfindingHardFactors" value="no-symbols-visual-cues"> No symbols or visual cues</label>
+      <label><input type="checkbox" name="wayfindingHardFactors" value="too-much-information"> Too much information</label>
+
+      <div class="form-nav">
+        <button type="button" class="back-btn">Back</button>
+        <button type="button" class="next-btn">Next</button>
+      </div>
+    </section>
+
+    <!-- CHAPTER 8. HOW IT FELT / SCREEN 19 -->
+    <section class="form-step" data-step="20">
+      <p class="form-chapter-label">How it felt</p>
+      <h3>At any point, did the environment make it harder to feel comfortable or focus?</h3>
+
+      <label><input type="radio" name="environmentComfortImpact" value="no"> No</label>
+      <label><input type="radio" name="environmentComfortImpact" value="a-little"> A little</label>
+      <label><input type="radio" name="environmentComfortImpact" value="yes"> Yes</label>
+
+      <div class="form-nav">
+        <button type="button" class="back-btn">Back</button>
+        <button type="button" class="next-btn">Next</button>
+      </div>
+    </section>
+
+    <!-- CHAPTER 8. HOW IT FELT / SCREEN 20 -->
+    <section class="form-step" data-step="21">
+      <p class="form-chapter-label">How it felt</p>
+      <h3>What made you uncomfortable?</h3>
+      <small>(Pick all that applies)</small>
+
+      <label><input type="checkbox" name="environmentDiscomfortFactors" value="background-music-too-loud"> Background music is too loud</label>
+      <label><input type="checkbox" name="environmentDiscomfortFactors" value="sudden-noise"> Sudden noise</label>
+      <label><input type="checkbox" name="environmentDiscomfortFactors" value="people-talking-loudly"> People were talking really loudly</label>
+      <label><input type="checkbox" name="environmentDiscomfortFactors" value="lighting-harsh-uncomfortable"> Lighting felt harsh or uncomfortable</label>
+      <label><input type="checkbox" name="environmentDiscomfortFactors" value="lighting-too-dim"> Lighting was too dim to see clearly</label>
+      <label><input type="checkbox" name="environmentDiscomfortFactors" value="too-much-visual-happening"> Too much happening visually</label>
+      <label><input type="checkbox" name="environmentDiscomfortFactors" value="too-crowded"> Too many people / too crowded</label>
+
+      <div class="form-nav">
+        <button type="button" class="back-btn">Back</button>
+        <button type="button" class="next-btn">Next</button>
+      </div>
+    </section>
+
+    <!-- CHAPTER 8. HOW IT FELT / SCREEN 21 -->
+    <section class="form-step" data-step="22">
+      <p class="form-chapter-label">How it felt</p>
+      <h3>Did anything catch you off guard as you moved around?</h3>
+
+      <label><input type="radio" name="environmentOffGuardLevel" value="no"> No</label>
+      <label><input type="radio" name="environmentOffGuardLevel" value="a-little"> A little</label>
+      <label><input type="radio" name="environmentOffGuardLevel" value="yes"> Yes</label>
+
+      <div class="form-nav">
+        <button type="button" class="back-btn">Back</button>
+        <button type="button" class="next-btn">Next</button>
+      </div>
+    </section>
+
+    <!-- CHAPTER 8. HOW IT FELT / SCREEN 22 -->
+    <section class="form-step" data-step="23">
+      <p class="form-chapter-label">How it felt</p>
+      <h3>What caught you off guard?</h3>
+      <small>(Pick all that apply)</small>
+
+      <label><input type="checkbox" name="environmentOffGuardFactors" value="sudden-step-or-slope"> Sudden step or slope</label>
+      <label><input type="checkbox" name="environmentOffGuardFactors" value="floor-changed"> Floor changed (slippery / uneven)</label>
+      <label><input type="checkbox" name="environmentOffGuardFactors" value="lighting-changed-a-lot"> Lighting changed a lot</label>
+      <label><input type="checkbox" name="environmentOffGuardFactors" value="noise-level-changed-suddenly"> Noise level changed suddenly</label>
+      <label><input type="checkbox" name="environmentOffGuardFactors" value="space-became-tight-or-crowded"> Space became tight or crowded</label>
+
+      <div class="form-nav">
+        <button type="button" class="back-btn">Back</button>
+        <button type="button" class="next-btn">Next</button>
+      </div>
+    </section>
+
+    <!-- CHAPTER 9. TAKING A BREAK / SCREEN 23 -->
+    <section class="form-step" data-step="24">
+      <p class="form-chapter-label">Taking a break</p>
+      <h3>If you needed a quieter or calmer spot, would it be easy to find one?</h3>
+
+      <label><input type="radio" name="takingCalmSpotEase" value="yes"> Yes</label>
+      <label><input type="radio" name="takingCalmSpotEase" value="maybe"> Maybe</label>
+      <label><input type="radio" name="takingCalmSpotEase" value="not-really"> Not really</label>
+
+      <div class="form-nav">
+        <button type="button" class="back-btn">Back</button>
+        <button type="button" class="next-btn">Next</button>
+      </div>
+    </section>
+
+    <!-- CHAPTER 9. TAKING A BREAK / SCREEN 24 -->
+    <section class="form-step" data-step="25">
+      <p class="form-chapter-label">Taking a break</p>
+      <h3>What made it harder to find a calm area?</h3>
+      <small>(Pick all that apply)</small>
+
+      <label><input type="checkbox" name="takingCalmAreaHardFactors" value="too-crowded-everywhere"> Too crowded everywhere</label>
+      <label><input type="checkbox" name="takingCalmAreaHardFactors" value="seating-too-exposed"> Seating was too exposed</label>
+      <label><input type="checkbox" name="takingCalmAreaHardFactors" value="music-noise-reached-every-area"> Music/noise reached every area</label>
+      <label><input type="checkbox" name="takingCalmAreaHardFactors" value="space-felt-visually-busy"> Space felt visually busy</label>
+
+      <div class="form-nav">
+        <button type="button" class="back-btn">Back</button>
+        <button type="button" class="next-btn">Next</button>
+      </div>
+    </section>
+
+    <!-- CHAPTER 9. TAKING A BREAK / SCREEN 25 -->
+    <section class="form-step" data-step="26">
+      <p class="form-chapter-label">Taking a break</p>
+      <h3>Were there comfortable places to sit or rest?</h3>
+
+      <label><input type="radio" name="takingSitRestAvailability" value="yes-plenty"> Yes, plenty</label>
+      <label><input type="radio" name="takingSitRestAvailability" value="a-few"> A few</label>
+      <label><input type="radio" name="takingSitRestAvailability" value="hard-to-find"> Hard to find</label>
+
+      <div class="form-nav">
+        <button type="button" class="back-btn">Back</button>
+        <button type="button" class="next-btn">Next</button>
+      </div>
+    </section>
+
+    <!-- CHAPTER 9. TAKING A BREAK / SCREEN 26 -->
+    <section class="form-step" data-step="27">
+      <p class="form-chapter-label">Taking a break</p>
+      <h3>If you needed to stay here for a while, how manageable would it feel?</h3>
+
+      <label><input type="radio" name="takingLongStayManageability" value="comfortable-longer-stays"> Comfortable even for longer stays</label>
+      <label><input type="radio" name="takingLongStayManageability" value="okay-short-time"> Okay for a short time</label>
+      <label><input type="radio" name="takingLongStayManageability" value="difficult-long"> Difficult to stay for long</label>
+
+      <div class="form-nav">
+        <button type="button" class="back-btn">Back</button>
+        <button type="button" class="next-btn">Next</button>
+      </div>
+    </section>
+
+    <!-- CHAPTER 9. TAKING A BREAK / SCREEN 27 -->
+    <section class="form-step" data-step="28">
+      <p class="form-chapter-label">Taking a break</p>
+      <h3>What would make staying difficult?</h3>
+      <small>(Pick all that apply)</small>
+
+      <label><input type="checkbox" name="takingLongStayDifficultFactors" value="too-crowded"> Too crowded</label>
+      <label><input type="checkbox" name="takingLongStayDifficultFactors" value="nowhere-comfortable-sit"> Nowhere comfortable to sit</label>
+      <label><input type="checkbox" name="takingLongStayDifficultFactors" value="felt-exposed-watched"> Felt exposed or watched</label>
+      <label><input type="checkbox" name="takingLongStayDifficultFactors" value="environment-felt-tiring"> Environment felt tiring</label>
+
+      <div class="form-nav">
+        <button type="button" class="back-btn">Back</button>
+        <button type="button" class="next-btn">Next</button>
+      </div>
+    </section>
+
+    <!-- CHAPTER 10. FEELING SAFE / SCREEN 28 -->
+    <section class="form-step" data-step="29">
+      <p class="form-chapter-label">Feeling safe</p>
+      <h3>Did the space generally feel open and visible?</h3>
+
+      <label><input type="radio" name="safetyOpenVisible" value="yes"> Yes</label>
+      <label><input type="radio" name="safetyOpenVisible" value="mostly"> Mostly</label>
+      <label><input type="radio" name="safetyOpenVisible" value="not-really"> Not really</label>
+
+      <div class="form-nav">
+        <button type="button" class="back-btn">Back</button>
+        <button type="button" class="next-btn">Next</button>
+      </div>
+    </section>
+
+    <!-- CHAPTER 10. FEELING SAFE / SCREEN 29 -->
+    <section class="form-step" data-step="30">
+      <p class="form-chapter-label">Feeling safe</p>
+      <h3>Did any areas feel hidden, isolated, or hard to leave quickly?</h3>
+
+      <label><input type="radio" name="safetyHiddenAreas" value="none"> None</label>
+      <label><input type="radio" name="safetyHiddenAreas" value="a-few"> A few</label>
+      <label><input type="radio" name="safetyHiddenAreas" value="many"> Many</label>
+
+      <div class="form-nav">
+        <button type="button" class="back-btn">Back</button>
+        <button type="button" class="next-btn">Next</button>
+      </div>
+    </section>
+
+    <!-- CHAPTER 10. FEELING SAFE / SCREEN 30 -->
+    <section class="form-step" data-step="31">
+      <p class="form-chapter-label">Feeling safe</p>
+      <h3>If you needed help, would it feel easy to get someone’s attention?</h3>
+
+      <label><input type="radio" name="safetyGetHelpEase" value="yes"> Yes</label>
+      <label><input type="radio" name="safetyGetHelpEase" value="maybe"> Maybe</label>
+      <label><input type="radio" name="safetyGetHelpEase" value="no"> No</label>
+
+      <div class="form-nav">
+        <button type="button" class="back-btn">Back</button>
+        <button type="button" class="next-btn">Next</button>
+      </div>
+    </section>
+
+    <!-- CHAPTER 11. WHO THIS PLACE MAY WORK FOR / SCREEN 33 -->
+    <section class="form-step" data-step="32">
+      <p class="form-chapter-label">Who it works for</p>
+      <h3>Who do you think might feel comfortable here?</h3>
+      <small>(Pick any that apply)</small>
+
+      <label><input type="checkbox" name="whoComfortableFor" value="visiting-alone"> People visiting alone</label>
+      <label><input type="checkbox" name="whoComfortableFor" value="wheelchair-users"> Wheelchair users</label>
+      <label><input type="checkbox" name="whoComfortableFor" value="elderly-visitors"> Elderly visitors</label>
+      <label><input type="checkbox" name="whoComfortableFor" value="families-with-kids"> Families with kids</label>
+      <label><input type="checkbox" name="whoComfortableFor" value="sensitive-noise-crowds"> People sensitive to noise/crowds</label>
+      <label><input type="checkbox" name="whoComfortableFor" value="first-time-visitors"> First-time visitors</label>
+
+      <div class="form-nav">
+        <button type="button" class="back-btn">Back</button>
+        <button type="button" class="next-btn">Next</button>
+      </div>
+    </section>
+
+    <!-- CHAPTER 11. WHO THIS PLACE MAY WORK FOR / SCREEN 34 -->
+    <section class="form-step" data-step="33">
+      <p class="form-chapter-label">Who it works for</p>
+      <h3>Who might find this place more difficult?</h3>
+      <small>(Pick any that apply)</small>
+
+      <label><input type="checkbox" name="whoDifficultFor" value="wheelchair-users"> Wheelchair users</label>
+      <label><input type="checkbox" name="whoDifficultFor" value="low-vision"> People with low vision</label>
+      <label><input type="checkbox" name="whoDifficultFor" value="sensitive-noise-crowds"> People sensitive to noise/crowds</label>
+      <label><input type="checkbox" name="whoDifficultFor" value="elderly-visitors"> Elderly visitors</label>
+      <label><input type="checkbox" name="whoDifficultFor" value="carrying-lots-of-things"> People carrying lots of things</label>
+      <label><input type="checkbox" name="whoDifficultFor" value="first-time-visitors"> First-time visitors</label>
+
+      <div class="form-nav">
+        <button type="button" class="back-btn">Back</button>
+        <button type="button" class="next-btn">Next</button>
+      </div>
+    </section>
+
+    <!-- CHAPTER 12. WHAT WORKED / SCREEN 35 -->
+    <section class="form-step" data-step="34">
+      <p class="form-chapter-label">What worked</p>
+      <h3>What felt easiest or most comfortable here?</h3>
+      <small>(Pick up to 2)</small>
+
+      <div class="chip-group">
+        <label><input type="checkbox" name="positiveHighlights" value="easy-movement"> Getting in and around</label>
+        <label><input type="checkbox" name="positiveHighlights" value="easy-find"> Finding things</label>
+        <label><input type="checkbox" name="positiveHighlights" value="quiet-spots"> Quiet or calmer areas</label>
+        <label><input type="checkbox" name="positiveHighlights" value="seating-resting"> Seating or resting</label>
+        <label><input type="checkbox" name="positiveHighlights" value="feeling-safe"> Feeling safe</label>
+        <label><input type="checkbox" name="positiveHighlights" value="overall-atmosphere"> Overall atmosphere</label>
       </div>
 
       <div class="form-nav">
@@ -445,29 +801,13 @@
       </div>
     </section>
 
-    <!-- FINAL -->
-    <section class="form-step" data-step="9">
-      <h3>Positive Extraction</h3>
+    <!-- CHAPTER 13. YOUR NOTE / SCREEN 36 -->
+    <section class="form-step" data-step="35">
+      <p class="form-chapter-label">Your note</p>
+      <h3>What’s something you’d want someone else to know before coming here?</h3>
+      <small>(Optional)</small>
 
-      <div class="form-group">
-        <label>What worked well here?</label>
-        <small>(Pick up to 3)</small>
-
-        <div class="chip-group">
-          <label><input type="checkbox" name="positiveHighlights" value="easy-movement"> Easy to move around</label>
-          <label><input type="checkbox" name="positiveHighlights" value="easy-find"> Easy to find things</label>
-          <label><input type="checkbox" name="positiveHighlights" value="sound"> Comfortable sound</label>
-          <label><input type="checkbox" name="positiveHighlights" value="lighting"> Comfortable lighting</label>
-          <label><input type="checkbox" name="positiveHighlights" value="visual"> Visually calm</label>
-          <label><input type="checkbox" name="positiveHighlights" value="gradual"> Gradual transitions</label>
-          <label><input type="checkbox" name="positiveHighlights" value="quiet-spots"> Nice quieter spots</label>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label>Anything else?</label>
-        <textarea id="positiveNote"></textarea>
-      </div>
+      <textarea id="positiveNote"></textarea>
 
       <div class="form-nav">
         <button type="button" class="back-btn">Back</button>
@@ -476,7 +816,7 @@
     </section>
 
     <!-- SUMMARY -->
-    <section class="form-step" data-step="10">
+    <section class="form-step" data-step="36">
       <h3>Review submitted</h3>
       <p>Your review helped define this place as:</p>
       <div id="reviewSummaryList" class="summary-list"></div>
@@ -493,3 +833,4 @@
 
 </body>
 </html>
+

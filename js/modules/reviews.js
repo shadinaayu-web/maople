@@ -1,5 +1,6 @@
 import { percentage, average } from "./utils.js";
 import { state } from "./state.js";
+import { normalizeReviewForApp } from "./review-compat.js";
 
 // ---------- DIMENSIONS CONFIG ----------
 
@@ -161,16 +162,17 @@ function scoreAccessibility(review) {
 }
 
 export function computeDimensionScores(review) {
-  if (review?.dimensionScores) {
-    return normalizeDimensionScores(review.dimensionScores);
+  const normalized = normalizeReviewForApp(review);
+  if (normalized?.dimensionScores) {
+    return normalizeDimensionScores(normalized.dimensionScores);
   }
   return {
-    calmness: scoreCalmness(review),
-    navigationEase: scoreNavigationEase(review),
-    spaciousness: scoreSpaciousness(review),
-    visualCalm: scoreVisualCalm(review),
-    quietCorners: scoreQuietCorners(review),
-    accessibility: scoreAccessibility(review)
+    calmness: scoreCalmness(normalized),
+    navigationEase: scoreNavigationEase(normalized),
+    spaciousness: scoreSpaciousness(normalized),
+    visualCalm: scoreVisualCalm(normalized),
+    quietCorners: scoreQuietCorners(normalized),
+    accessibility: scoreAccessibility(normalized)
   };
 }
 
@@ -223,8 +225,8 @@ function normalizeDimensionScores(scores) {
 // ---------- DATA ANALYSIS ----------
 
 export function aggregateReviews(reviews) {
-
-  const total = reviews.length;
+  const normalizedReviews = (reviews || []).map(normalizeReviewForApp);
+  const total = normalizedReviews.length;
 
   if (!total) {
     return {
@@ -232,7 +234,7 @@ export function aggregateReviews(reviews) {
     };
   }
 
-  const placeProfile = computePlaceDimensions(reviews);
+  const placeProfile = computePlaceDimensions(normalizedReviews);
 
   return {
 
@@ -240,44 +242,44 @@ export function aggregateReviews(reviews) {
 
     movement: {
       continuityAvg: average(
-        reviews.map(r => r.movement?.continuity)
+        normalizedReviews.map(r => r.movement?.continuity)
       )
     },
 
     wayfinding: {
       clarityAvg: average(
-        reviews.map(r => r.wayfinding?.clarity)
+        normalizedReviews.map(r => r.wayfinding?.clarity)
       )
     },
 
     visualLoad: {
       avg: average(
-        reviews.map(r => r.visualLoad?.level)
+        normalizedReviews.map(r => r.visualLoad?.level)
       )
     },
 
     transitions: {
       abruptnessAvg: average(
-        reviews.map(r => r.transitions?.abruptness)
+        normalizedReviews.map(r => r.transitions?.abruptness)
       )
     },
 
     sound: {
       overallAvg: average(
-        reviews.map(r => r.sound?.overall)
+        normalizedReviews.map(r => r.sound?.overall)
       )
     },
 
     lighting: {
       overallAvg: average(
-        reviews.map(r => r.lighting?.overall)
+        normalizedReviews.map(r => r.lighting?.overall)
       )
     },
 
     calmZones: {
 
       clearlyAvailable: percentage(
-        reviews.filter(
+        normalizedReviews.filter(
           r => r.calmZones?.availability === "clearly"
         ).length,
         total
@@ -388,15 +390,17 @@ export function generateInsight(summary) {
 
 export function sortReviewsForDisplay(reviews) {
 
-  return [...reviews].sort((a, b) => {
+  return [...(reviews || [])]
+    .map(normalizeReviewForApp)
+    .sort((a, b) => {
 
-    if (a.userId === state.currentUserId) return -1;
+      if (a.userId === state.currentUserId) return -1;
 
-    if (b.userId === state.currentUserId) return 1;
+      if (b.userId === state.currentUserId) return 1;
 
-    return new Date(b.createdAt) - new Date(a.createdAt);
+      return new Date(b.createdAt) - new Date(a.createdAt);
 
-  });
+    });
 
 }
 

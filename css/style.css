@@ -2032,6 +2032,15 @@ small {
   display: block;
 }
 
+.form-chapter-label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  margin: 0 0 6px;
+  font-weight: 600;
+}
+
 .start-review-btn {
   margin-left: auto;
 }

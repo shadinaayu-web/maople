@@ -13,6 +13,7 @@ import {
 } from "./filters.js";
 import { openAddReviewForm, cancelReview } from "./search.js";
 import { getMap } from "./map.js";
+import { normalizeReviewForApp } from "./review-compat.js";
 
 import {
   collection,
@@ -83,10 +84,11 @@ export async function openSidePanel(place) {
   const reviews = [];
 
   reviewsSnap.forEach(doc => reviews.push(doc.data()));
+  const normalizedReviews = reviews.map(normalizeReviewForApp);
 
   const summary = useSnapshot
     ? aggregateReviewsFromSnapshot(place)
-    : aggregateReviews(reviews);
+    : aggregateReviews(normalizedReviews);
 
   const insight = generateInsight(summary);
   const placeProfile = summary.placeProfile || {};
@@ -96,9 +98,9 @@ export async function openSidePanel(place) {
   const showFilterNote = hasActiveFilters();
   const lowData = summary.total > 0 && summary.total < 4 && showFilterNote;
   const needsMore = summary.total < 3;
-  const orderedReviews = sortReviewsForDisplay(reviews);
+  const orderedReviews = sortReviewsForDisplay(normalizedReviews);
   const peopleTags = getPeopleComeHereFor(summary);
-  const headerInfo = getHeaderInfo(place, reviews);
+  const headerInfo = getHeaderInfo(place, normalizedReviews);
 
   content.innerHTML = `
     <div class="panel-layout">
